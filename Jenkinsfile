@@ -5,8 +5,13 @@ node {
     }
 
 stage('Build') {
-    docker.image('composer:2-php8.4').inside('--entrypoint="" -u root') {
+    docker.image('php:8.4-cli').inside('--entrypoint="" -u root') {
         sh '''
+        apt-get update
+        apt-get install -y git unzip curl
+        curl -sS https://getcomposer.org/installer | php
+        mv composer.phar /usr/local/bin/composer
+
         git config --global --add safe.directory /var/jenkins_home/workspace/laravel-dev
 
         php -v
