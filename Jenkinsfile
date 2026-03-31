@@ -4,15 +4,18 @@ node {
         checkout scm
     }
 
-    stage('Build') {
-        docker.image('composer:2').inside('--entrypoint="" -u root') {
-            sh '''
-            php -v
-            composer --version
-            composer install --ignore-platform-req=ext-gd
-            '''
-        }
+stage('Build') {
+    docker.image('composer:2-php8.4').inside('--entrypoint="" -u root') {
+        sh '''
+        git config --global --add safe.directory /var/jenkins_home/workspace/laravel-dev
+
+        php -v
+        composer --version
+
+        composer install --ignore-platform-req=ext-gd
+        '''
     }
+}
 
     stage('Testing') {
         docker.image('ubuntu:22.04').inside('--entrypoint="" -u root') {
