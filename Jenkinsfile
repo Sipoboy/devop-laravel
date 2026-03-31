@@ -5,19 +5,14 @@ node {
     }
 
     stage('Build') {
-    docker.image('composer:2').inside('--entrypoint="" -u root') {
-        sh '''
-        apt-get update
-        apt-get install -y git unzip libzip-dev libpng-dev
-        docker-php-ext-install zip gd || true
-
-        php -v
-        composer --version
-
-        composer install --ignore-platform-req=ext-gd
-        '''
+        docker.image('composer:2').inside('--entrypoint="" -u root') {
+            sh '''
+            php -v
+            composer --version
+            composer install --ignore-platform-req=ext-gd
+            '''
+        }
     }
-}
 
     stage('Testing') {
         docker.image('ubuntu:22.04').inside('--entrypoint="" -u root') {
