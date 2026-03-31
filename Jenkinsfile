@@ -8,7 +8,10 @@ stage('Build') {
     docker.image('php:8.4-cli').inside('--entrypoint="" -u root') {
         sh '''
         apt-get update
-        apt-get install -y git unzip curl
+        apt-get install -y git unzip curl libzip-dev
+
+        docker-php-ext-install zip
+
         curl -sS https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
 
