@@ -11,7 +11,7 @@
                     <div class="col-lg-0 col-xl-5"></div>
                     <div class="col-xl-7 animated fadeInLeft">
                         <div class="text-sm-center text-md-end">
-                            <h4 class="text-primary text-uppercase fw-bold mb-4">Selamat Datang di alex</h4>
+                            <h4 class="text-primary text-uppercase fw-bold mb-4">Selamat Datang di alex123</h4>
                             <h1 class="display-4 text-uppercase text-white mb-4">Layanan Rumah Terpercaya dan Cepat</h1>
                             <p class="mb-5 fs-5">Kami menyediakan berbagai layanan rumah seperti perbaikan, pembersihan, dan instalasi, langsung ke rumah Anda dengan mudah dan profesional.</p>
                             <div class="d-flex justify-content-center justify-content-md-end flex-shrink-0 mb-4">
