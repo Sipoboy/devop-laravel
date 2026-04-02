@@ -33,28 +33,45 @@ stage('Build') {
         }
     }
 
-    stage('Deploy') {
-        withEnv(["PROD_HOST=172.25.46.154"]) {
-            docker.image('agung3wi/alpine-rsync:1.1').inside('--entrypoint="" -u root') {
-                sshagent(credentials: ['ssh-prod']) {
-                    sh '''
-                    mkdir -p ~/.ssh
-                    ssh-keyscan -H $PROD_HOST >> ~/.ssh/known_hosts
+stage('Deploy') {
+    withEnv(["PROD_HOST=172.25.46.154"]) {
+        docker.image('agung3wi/alpine-rsync:1.1').inside('--entrypoint="" -u root') {
+            sshagent(credentials: ['ssh-prod']) {
+                sh '''
+                set -eux
 
-                    ssh alexr@$PROD_HOST "rm -f /home/alexr/prod.kelasdevops.xyz/bootstrap/cache/packages.php /home/alexr/prod.kelasdevops.xyz/bootstrap/cache/services.php"
+                whoami
+                uname -a
 
-                    rsync -rav --delete ./ \
-                        alexr@$PROD_HOST:/home/alexr/prod.kelasdevops.xyz/ \
-                        --exclude='public/build' \
-                        --exclude='node_modules' \
-                        --exclude='vendor' \
-                        --exclude='storage' \
-                        --exclude='.git' \
-                        --exclude='.env'
-                    '''
-                }
+                which ssh || true
+                which ssh-keyscan || true
+                which rsync || true
+
+                ssh -V || true
+                rsync --version || true
+
+                mkdir -p ~/.ssh
+                chmod 700 ~/.ssh
+
+                ssh-keyscan -H $PROD_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+                chmod 600 ~/.ssh/known_hosts
+
+                ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 alexr@$PROD_HOST "echo SSH_OK"
+
+                ssh alexr@$PROD_HOST "rm -f /home/alexr/prod.kelasdevops.xyz/bootstrap/cache/packages.php /home/alexr/prod.kelasdevops.xyz/bootstrap/cache/services.php"
+
+                rsync -rav --delete ./ \
+                    alexr@$PROD_HOST:/home/alexr/prod.kelasdevops.xyz/ \
+                    --exclude='public/build' \
+                    --exclude='node_modules' \
+                    --exclude='vendor' \
+                    --exclude='storage' \
+                    --exclude='.git' \
+                    --exclude='.env'
+                '''
             }
         }
     }
+}
 
 }
